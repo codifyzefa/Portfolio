@@ -38,7 +38,7 @@ export default function AnnouncementPopup() {
 
         <div className="announcement-item">
           <strong>Welcome to artbyzefa Community</strong> [
-          <a href="#" id="detailsLink">Click for Details</a>]
+          <a href="https://www.instagram.com/artbyzefa/" id="detailsLink">Click for Details</a>]
         </div>
 
         <div className="announcement-item">
