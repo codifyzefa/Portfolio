@@ -5,7 +5,7 @@ import "./contact.css";
 
 // Resolve API base in this order:
 // 1) Vite env (VITE_API_BASE) or CRA env (REACT_APP_API_BASE)
-// 2) Fallback to your live Render URL
+// 2) Fallback to your live Render URL (portfolio-2-yngq)
 function resolveApiBase() {
   const viteBase =
     (typeof import.meta !== "undefined" &&
@@ -14,12 +14,11 @@ function resolveApiBase() {
     "";
   const craBase = process.env.REACT_APP_API_BASE || "";
 
-  // If either env var is set, prefer it
   if (viteBase) return viteBase;
   if (craBase) return craBase;
 
-  // Default to your live backend on Render
-  return "https://portfolio-1-y78q.onrender.com";
+  // Default to your new backend on Render
+  return "https://portfolio-2-yngq.onrender.com";
 }
 const API_BASE = resolveApiBase();
 
