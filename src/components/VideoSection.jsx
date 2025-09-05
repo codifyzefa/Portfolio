@@ -38,7 +38,7 @@ export default function VideoSection() {
         <div className="video-grid">
           <div className="video-item">
             <div className="video-container">
-              <video src="video.mp4" playsInline muted controls={false} />
+              <video src="video.mp4" playsInline  controls={false} />
             </div>
             <div className="video-info">
               <h3 className="video-title">artbyzefa creative process</h3>
