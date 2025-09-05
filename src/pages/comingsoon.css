@@ -1,0 +1,130 @@
+:root{
+  --blue:#4a6cf7;
+  --black:#1a1a1a;
+  --gold:#D4AF37;
+  --white:#fff;
+  --border:#e6e8f0;
+  --muted:#6b7280;
+}
+
+.cs-wrap{
+  min-height: calc(100vh - 120px);
+  display:grid;
+  place-items:center;
+  background: radial-gradient(60% 80% at 50% 0%, #f5f7ff 0%, #ffffff 60%);
+  padding: 24px 12px;
+}
+
+.cs-card{
+  width:min(880px, 100%);
+  background: var(--white);
+  border:1px solid rgba(0,0,0,.06);
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.08);
+  padding: 28px;
+  text-align:center;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial;
+}
+
+.cs-badge{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:8px 14px;
+  border-radius:9999px;
+  background: linear-gradient(90deg, #111 0%, #2a2a2a 40%, #111 100%);
+  border:2px solid var(--gold);
+  color:#fff; font-weight:800; letter-spacing:.3px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+.cs-badge i{ color: var(--gold); }
+
+.cs-title{ margin:14px 0 6px; font-size: 34px; font-weight: 800; color: var(--black); }
+.cs-sub{ color: var(--muted); margin-bottom: 18px; }
+
+.cs-count{
+  display:grid; grid-template-columns: repeat(4, minmax(100px,1fr));
+  gap:12px; margin: 4px 0 18px;
+}
+.cell{
+  background:#f5f7ff; border:1px solid var(--border);
+  border-radius:14px; padding:14px 10px;
+}
+.cell .num{ font-size:28px; font-weight:800; color:#1a1a1a; line-height:1; }
+.cell .lab{ margin-top:6px; font-size:12px; color:#667085; letter-spacing:.2px; }
+
+/* FORM — responsive & matched heights */
+.cs-form{
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  flex-wrap:wrap;        /* allow wrap on smaller widths */
+  gap:10px;
+  margin: 6px 0 16px;
+}
+.cs-input{
+  display:flex; align-items:center; gap:8px;
+  background:#fff; border:1px solid var(--border); border-radius:12px;
+  padding:10px 12px;
+  min-width: 300px;      /* comfortable width on desktop */
+  flex: 1 1 320px;       /* can shrink/grow before wrapping */
+  height: 44px;
+}
+.cs-input i{ color:#7b86a2; }
+.cs-input input{
+  border:none; outline:none; width:100%;
+  font: 500 14px/1.2 inherit; color:#1a1a1a;
+}
+
+/* make button same height as input and comfy to tap */
+.cs-btn{
+  padding: 0 16px;
+  border-radius:12px;
+  height: 44px;          /* matches input height */
+  display:inline-flex; align-items:center; justify-content:center;
+  font-weight:800;
+}
+
+/* LINKS & SOCIAL */
+.cs-links{
+  display:flex; align-items:center; justify-content:center;
+  gap:16px; margin-top: 4px; flex-wrap:wrap;
+}
+.cs-link{
+  display:inline-flex; gap:8px; align-items:center;
+  padding:8px 12px; border:1px solid var(--border); border-radius:12px;
+  text-decoration:none; color:#1a1a1a; font-weight:600; background:#fff;
+}
+.cs-link i{ color: var(--blue); }
+
+.cs-social{ display:flex; gap:10px; margin-left:8px; }
+.cs-social a{
+  width:38px; height:38px; display:grid; place-items:center;
+  border:1px solid var(--border); border-radius:9999px; background:#fff;
+  color:#1a1a1a; text-decoration:none;
+}
+
+/* X/Twitter fallback: hide bird if X is supported, show bird if not */
+.x-link .tw-fallback{ display:none; }
+.x-link .x-icon{ display:inline-block; }
+@supports not (font-variation-settings: normal) { /* always true in most envs; we need a simple rule */
+  /* If FA doesn't include .fa-x-twitter glyph (older CDN), bird will still show
+     because both are present; keep the rule explicit for clarity */
+}
+.cs-social a:hover{ border-color:#ccd2e6; }
+
+/* FOOT */
+.cs-foot{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  color:#6b7280; padding-top: 8px; margin-top: 10px; border-top:1px dashed #eceef6;
+}
+.cs-foot .brand{
+  display:inline-block; padding:4px 10px; border:2px solid var(--gold);
+  border-radius:6px; font-weight:800; letter-spacing:.6px; color: var(--gold);
+}
+.cs-foot .sep{ color:#e9e7df; }
+.cs-foot .tag{ color:#7d8596; font-weight:500; }
+
+/* SMALL SCREENS */
+@media (max-width: 640px){
+  .cs-count{ grid-template-columns: repeat(2,1fr); }
+  .cs-btn{ width:100%; }   /* full width when wrapped under input */
+}

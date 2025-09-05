@@ -1,0 +1,209 @@
+:root{
+  --blue:#4a6cf7;
+  --black:#1a1a1a;
+  --gold:#D4AF37;
+  --text:#222;
+  --muted:#6b7280;
+  --border:#e6e8f0;
+  --bg:#ffffff;
+  --panel:#f9fafc;
+}
+
+/* Wrapper */
+.ourstory-wrap{
+  padding:48px 0 64px 0;
+  background:var(--bg);
+}
+
+/* Two-column layout */
+.story-layout{
+  display:grid;
+  grid-template-columns: 340px minmax(0,1fr);
+  gap:28px;
+}
+@media (max-width: 992px){
+  .story-layout{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left rail (sticky) */
+.left-rail{
+  position:relative;
+}
+.mission-card{
+  position: sticky;
+  top:84px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  background:#fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+}
+.mission-title{
+  margin:0 0 6px 0;
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial;
+  font-weight:800;
+  font-size: 32px;
+  letter-spacing:.5px;
+  color:#111;
+}
+.mission-kicker{
+  color:var(--muted);
+  margin:0 0 16px 0;
+}
+.mission-points{
+  display:flex; flex-direction:column; gap:10px; margin-bottom:14px;
+}
+.point{ display:flex; align-items:center; gap:10px; color:#111; }
+.point .dot{
+  width:8px; height:8px; border-radius:50%; background:var(--blue);
+  display:inline-block; flex: 0 0 8px;
+}
+.mission-cta{ display:flex; gap:10px; }
+
+/* Right content */
+.right-content{
+  min-width:0;
+}
+
+/* Sections */
+.story-section{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  background:#fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,.04);
+  margin-bottom:18px;
+}
+.cardish{
+  background:var(--panel);
+}
+
+/* Headings & text */
+.h2{
+  font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial;
+  font-weight:800;
+  font-size:22px;
+  margin:0 0 10px 0;
+  color:#111;
+  letter-spacing:.2px;
+}
+.h3{
+  font-weight:700;
+  font-size:18px;
+  margin:0 0 10px 0;
+  color:#111;
+}
+.story-section p{
+  margin:0 0 12px 0;
+  color:var(--text);
+  line-height:1.75;
+}
+.subtle{ color:var(--muted); }
+
+/* Pull quote */
+.pull-quote{
+  margin:14px 0;
+  padding:16px;
+  border-left:4px solid var(--gold);
+  background:#fffaf0;
+  border-radius:8px;
+  color:#111;
+  font-weight:600;
+}
+
+/* Principles list */
+.principles{
+  list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;
+}
+.principles li{ display:flex; gap:10px; align-items:center; }
+.badge{
+  background:var(--blue);
+  color:#fff;
+  font-weight:700;
+  font-size:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  white-space:nowrap;
+}
+
+/* Timeline */
+.timeline{
+  list-style:none; padding:0; margin:0; position:relative;
+}
+.timeline li{
+  display:grid;
+  grid-template-columns: 24px 1fr;
+  gap:12px;
+  position:relative;
+  padding-bottom:10px;
+}
+.timeline li::before{
+  content:"";
+  position:absolute;
+  left:11px; top:0; bottom:-4px;
+  width:2px; background:var(--border);
+}
+.t-dot{
+  width:14px; height:14px; border-radius:50%;
+  border:2px solid var(--blue); background:#fff; margin-top:4px; z-index:2;
+}
+.t-body h3{
+  margin:0 0 6px 0; font-weight:700; font-size:16px;
+}
+.t-body p{ margin:0; }
+
+/* Grid section */
+.grid-2{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:14px;
+}
+@media (max-width: 768px){
+  .grid-2{ grid-template-columns: 1fr; }
+}
+.panel{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  padding:16px;
+}
+.list{
+  margin:0; padding-left:18px;
+}
+.list li{
+  margin-bottom:8px;
+}
+
+/* Footer brand line */
+.story-end {
+  margin-top: 50px;
+  padding: 20px 12px;
+  border-top: 3px solid #e6e8f0;
+  text-align: center;
+  background: #f9fafc;
+}
+
+.story-end .brand {
+  display: inline-block;
+  padding: 6px 14px;
+  border: 2px solid #d4af37;
+  border-radius: 8px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #d4af37;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  margin-right: 8px;
+}
+
+.story-end .sep {
+  display: none; /* removed the bullet separator */
+}
+
+.story-end .tag {
+  font-size: 14px;
+  font-weight: 500;
+  color: #444;
+}
