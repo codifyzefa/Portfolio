@@ -46,6 +46,12 @@ export default function AnnouncementPopup() {
           <a href="notification.jpg">Click here for Notification</a>
         </div>
 
+          <div className="announcement-item">
+          <strong>Announcement</strong><br />
+          <p>The AI Chatbot of ArtByZefa is currently experiencing issues and may not work as expected.</p>
+          <p>Our team is actively working on resolving the problem. Please stay tuned — we expect things to be back to normal within 4–5 days.</p>
+          <p>Thank you for your patience and understanding.</p>
+        </div>
         <div className="announcement-item">
           <strong>Official Instagram Page</strong><br />
           [<a href="https://www.instagram.com/artbyzefa/" id="detailsLink">Click for Details</a>]
