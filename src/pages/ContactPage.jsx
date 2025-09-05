@@ -5,20 +5,21 @@ import "./contact.css";
 
 // Resolve API base in this order:
 // 1) Vite env (VITE_API_BASE) or CRA env (REACT_APP_API_BASE)
-// 2) If on CRA dev server (port 3000) and no env given -> fallback to http://localhost:5000
-// 3) Otherwise empty string (assumes you set up a dev proxy)
+// 2) Fallback to your live Render URL
 function resolveApiBase() {
   const viteBase =
-    (typeof import.meta !== "undefined" && import.meta.env && import.meta.env.VITE_API_BASE) || "";
+    (typeof import.meta !== "undefined" &&
+      import.meta.env &&
+      import.meta.env.VITE_API_BASE) ||
+    "";
   const craBase = process.env.REACT_APP_API_BASE || "";
+
+  // If either env var is set, prefer it
   if (viteBase) return viteBase;
   if (craBase) return craBase;
 
-  // Auto-fallback for CRA dev (common cause of 404)
-  if (typeof window !== "undefined" && window.location && window.location.port === "3000") {
-    return "http://localhost:5000";
-  }
-  return "";
+  // Default to your live backend on Render
+  return "https://portfolio-1-y78q.onrender.com";
 }
 const API_BASE = resolveApiBase();
 
@@ -53,10 +54,12 @@ export default function ContactPage() {
       });
 
       if (!data?.ok) throw new Error(data?.error || "Failed to send message.");
-      setStatus({ type: "success", msg: "Thanks! Your message has been sent. Please check your email." });
+      setStatus({
+        type: "success",
+        msg: "Thanks! Your message has been sent. Please check your email.",
+      });
       setForm({ firstName: "", lastName: "", email: "", message: "" });
     } catch (e2) {
-      // axios already normalizes network errors; show a friendly message
       setStatus({ type: "error", msg: e2.message || "Something went wrong. Try again." });
     } finally {
       setLoading(false);
