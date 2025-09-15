@@ -1,12 +1,20 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-/** Minimal, clean styles */
-const styles = {
+/** Minimal, clean styles (base) */
+const baseStyles = {
   page: { padding: "24px 12px", maxWidth: 1100, margin: "0 auto" },
   title: { fontWeight: 800, fontSize: 36, marginBottom: 8 },
   subtitle: { color: "#555", marginBottom: 24 },
   tabs: {
-    wrap: { display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 },
+    wrap: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 8,
+      marginBottom: 16,
+      overflowX: "auto",
+      WebkitOverflowScrolling: "touch",
+      paddingBottom: 4,
+    },
     btn: (active) => ({
       padding: "10px 14px",
       borderRadius: 9999,
@@ -15,19 +23,17 @@ const styles = {
       color: active ? "#1a1a1a" : "#333",
       cursor: "pointer",
       fontWeight: 600,
+      whiteSpace: "nowrap",
+      flex: "0 0 auto",
     }),
   },
   grid: {
-    wrap: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3, 1fr)",
-      gap: 16,
-    },
     card: {
       border: "1px solid #e6e8f0",
       borderRadius: 12,
       padding: 14,
       background: "#fff",
+      minWidth: 0,
     },
     h3: { fontSize: 18, fontWeight: 700, margin: "4px 0 10px" },
     list: { display: "grid", gap: 10 },
@@ -59,10 +65,7 @@ const styles = {
   },
 };
 
-/** Data model:
- * Each category has { websites:[], books:[], videos:[] }
- * Resource item: { title, url, note? }
- */
+/** Data model (unchanged) */
 const DATA = {
   Web: {
     websites: [
@@ -181,7 +184,7 @@ const DATA = {
     ],
   },
 
-  "C": {
+  C: {
     websites: [
       { title: "ISO C (cppreference C section)", url: "https://en.cppreference.com/w/c" },
       { title: "C FAQ (c-faq.com mirror)", url: "https://c-faq.com/" },
@@ -394,7 +397,7 @@ const DATA = {
       { title: "Deep Learning (Goodfellow, Bengio, Courville)", url: "https://www.deeplearningbook.org/" },
       { title: "Pattern Recognition and ML (Bishop)", url: "https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/" },
       { title: "Dive into Deep Learning", url: "https://d2l.ai/" },
-      { title: "Probabilistic ML (Murphy) — MLPP/ML: A Probabilistic Perspective", url: "https://probml.github.io/pml-book/" },
+      { title: "Probabilistic ML (Murphy)", url: "https://probml.github.io/pml-book/" },
       { title: "Grokking Machine Learning", url: "https://www.manning.com/books/grokking-machine-learning" },
       { title: "Practical Deep Learning for Coders (fast.ai)", url: "https://course.fast.ai/Resources/book.html" },
       { title: "Bayesian Reasoning and Machine Learning", url: "http://web4.cs.ucl.ac.uk/staff/D.Barber/textbook/031013.pdf" },
@@ -421,15 +424,15 @@ const CATEGORIES = Object.keys(DATA);
 
 function Section({ title, items }) {
   return (
-    <div style={styles.grid.card}>
-      <h3 style={styles.grid.h3}>{title}</h3>
-      <div style={styles.grid.list}>
+    <div style={baseStyles.grid.card}>
+      <h3 style={baseStyles.grid.h3}>{title}</h3>
+      <div style={baseStyles.grid.list}>
         {items.map(({ title, url, note }, i) => (
-          <div key={i} style={styles.grid.item}>
-            <a href={url} target="_blank" rel="noreferrer" style={styles.grid.link}>
+          <div key={i} style={baseStyles.grid.item}>
+            <a href={url} target="_blank" rel="noreferrer" style={baseStyles.grid.link}>
               {title}
             </a>
-            {note ? <div style={styles.grid.meta}>{note}</div> : null}
+            {note ? <div style={baseStyles.grid.meta}>{note}</div> : null}
           </div>
         ))}
       </div>
@@ -437,32 +440,72 @@ function Section({ title, items }) {
   );
 }
 
+/** Small hook to track viewport width for responsive inline styles */
+function useViewport() {
+  const [w, setW] = useState(
+    typeof window === "undefined" ? 1200 : window.innerWidth
+  );
+  useEffect(() => {
+    const onR = () => setW(window.innerWidth);
+    window.addEventListener("resize", onR, { passive: true });
+    return () => window.removeEventListener("resize", onR);
+  }, []);
+  return w;
+}
+
 export default function ResourcesPage() {
   const [tab, setTab] = useState(CATEGORIES[0]);
   const pack = useMemo(() => DATA[tab], [tab]);
 
+  const width = useViewport();
+
+  // Responsive knobs
+  const cols = width < 640 ? 1 : width < 992 ? 2 : 3;
+  const pagePad = width < 480 ? "18px 10px" : width < 768 ? "22px 12px" : "24px 12px";
+  const titleSize = width < 480 ? 24 : width < 768 ? 30 : 36;
+
+  // Computed container grid style
+  const gridWrapStyle = useMemo(
+    () => ({
+      display: "grid",
+      gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+      gap: 16,
+      alignItems: "start",
+    }),
+    [cols]
+  );
+
   return (
-    <section style={styles.page}>
-      <h1 style={styles.title}>Developer Resources</h1>
-      <p style={styles.subtitle}>
+    <section style={{ ...baseStyles.page, padding: pagePad }}>
+      <h1 style={{ ...baseStyles.title, fontSize: titleSize }}>Developer Resources</h1>
+      <p style={baseStyles.subtitle}>
         Curated, evergreen links for learning and mastery. Books, courses, and docs — hand-picked for quality.
       </p>
 
-      <div style={styles.tabs.wrap}>
+      <div style={baseStyles.tabs.wrap}>
         {CATEGORIES.map((c) => (
-          <button key={c} style={styles.tabs.btn(c === tab)} onClick={() => setTab(c)}>
+          <button key={c} style={baseStyles.tabs.btn(c === tab)} onClick={() => setTab(c)}>
             {c}
           </button>
         ))}
       </div>
 
-      <div style={styles.grid.wrap}>
+      <div style={gridWrapStyle}>
         <Section title="Top Websites / Docs" items={pack.websites} />
         <Section title="Books" items={pack.books} />
         <Section title="Videos / Courses" items={pack.videos} />
       </div>
 
-      <div style={{ marginTop: 24, padding: 14, border: "1px solid #e6e8f0", borderRadius: 12, background: "#f9fafc" }}>
+      <div
+        style={{
+          marginTop: 24,
+          padding: 14,
+          border: "1px solid #e6e8f0",
+          borderRadius: 12,
+          background: "#f9fafc",
+          fontSize: width < 480 ? 13 : 14,
+        }}
+      >
         Pro tip: Save this page. Pick one track, then follow this loop — read → build → ask → refactor → repeat.
       </div>
     </section>

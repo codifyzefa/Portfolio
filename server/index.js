@@ -11,52 +11,39 @@ app.set("trust proxy", true);
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-/* ---------------------------
-   CORS
-----------------------------*/
+/* ---- CORS (unchanged) ---- */
 const devDefaultOrigins = new Set([
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
 ]);
-
-// ALLOWED_ORIGINS should contain *production* origins, comma-separated
-// e.g. "https://artbyzefa.today,https://www.artbyzefa.today"
 const extraOrigins = (process.env.ALLOWED_ORIGINS || "")
   .split(",")
   .map((s) => s.trim())
   .filter(Boolean);
-
 const prodOrigins = new Set(extraOrigins);
-
 const allowOrigin = (origin) => {
-  if (!origin) return true; // SSR, curl, same-origin
+  if (!origin) return true;
   if (process.env.NODE_ENV !== "production") return devDefaultOrigins.has(origin);
   return prodOrigins.has(origin);
 };
-
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (allowOrigin(origin)) return cb(null, true);
-      cb(new Error(`CORS: origin not allowed -> ${origin || "null"}`));
-    },
+    origin: (origin, cb) => (allowOrigin(origin) ? cb(null, true) : cb(new Error(`CORS: origin not allowed -> ${origin || "null"}`))),
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
     credentials: false,
   })
 );
 
-/* ---------------------------
-   ENV
-----------------------------*/
+/* ---- ENV ---- */
 const {
   SMTP_HOST,
   SMTP_PORT,
   SMTP_USER,
   SMTP_PASS,
-  OWNER_EMAIL, // where you receive leads
+  OWNER_EMAIL,
   BRAND_NAME = "ArtbyZefa",
   SITE_URL = "https://artbyzefa.today",
   CONTACT_PHONE = "",
@@ -66,20 +53,24 @@ const {
   NODE_ENV,
 } = process.env;
 
-const PORT = process.env.PORT || 5000; // Render provides PORT
+const PORT = process.env.PORT || 5000;
 
-/* ---------------------------
-   Email Transport
-----------------------------*/
+/* ---- Transport ---- */
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: Number(SMTP_PORT || 587),
-  secure: Number(SMTP_PORT) === 465, // true for 465, false for others
+  secure: Number(SMTP_PORT) === 465,
   auth: { user: SMTP_USER, pass: SMTP_PASS },
+  tls: {
+    // modern ciphers and strict TLS help reputation with some MTAs
+    minVersion: "TLSv1.2",
+    rejectUnauthorized: true,
+  },
 });
 
 const fromAddress = { name: BRAND_NAME, address: SMTP_USER };
 
+/* ---- helpers / templates (unchanged except email bodies below) ---- */
 const escapeHtml = (str = "") =>
   String(str)
     .replaceAll("&", "&amp;")
@@ -91,87 +82,50 @@ const escapeHtml = (str = "") =>
 const devDetails = (err) =>
   NODE_ENV === "production"
     ? undefined
-    : {
-        code: err?.code,
-        responseCode: err?.responseCode,
-        command: err?.command,
-        message: err?.message,
-      };
+    : { code: err?.code, responseCode: err?.responseCode, command: err?.command, message: err?.message };
 
-/* ---------------------------
-   Email Templates (trimmed structure preserved)
-----------------------------*/
-const COLORS = {
-  blue: "#4a6cf7",
-  black: "#1a1a1a",
-  gold: "#D4AF37",
-  text: "#222222",
-  light: "#f5f7ff",
-  border: "#e6e8f0",
-};
+const COLORS = { blue: "#4a6cf7", black: "#1a1a1a", gold: "#D4AF37", text: "#222222", light: "#f5f7ff", border: "#e6e8f0" };
 
 function emailShell({ preheader = "", title = "", body = "" }) {
-  return `
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="color-scheme" content="light only">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>${escapeHtml(title)}</title>
-    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-      ${escapeHtml(preheader)}
-    </div>
-  </head>
-  <body style="margin:0;padding:0;background:#ffffff;">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${COLORS.blue};">
-      <tr><td align="center" style="padding:8px 12px;">
-        <span style="font:500 12px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial; color:#fff; letter-spacing:.3px;">
-          DISCOVER THE POWER OF CODE AND USE IT TO CHANGE THE WORLD • ARTBYZEFA
-        </span>
-      </td></tr>
-    </table>
-
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${COLORS.black};">
-      <tr><td align="center" style="padding:22px 12px;">
-        <div style="font:800 24px/1 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial; color:#ffffff; letter-spacing:1px;">
-          <span style="display:inline-block;padding:8px 14px;border:2px solid ${COLORS.gold};border-radius:6px;">ARTBYZEFA</span>
-        </div>
-      </td></tr>
-    </table>
-
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-      <tr><td align="center">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="width:100%;max-width:640px;">
-          <tr><td style="padding:24px 20px 8px 20px;border-bottom:1px solid ${COLORS.border};">
-            <h1 style="margin:0;font:800 20px/1.3 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;color:${COLORS.black};">
-              ${escapeHtml(title)}
-            </h1>
-          </td></tr>
-          <tr><td style="padding:20px;color:${COLORS.text};font:400 14px/1.7 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Helvetica,Arial;">
-            ${body}
-          </td></tr>
-          <tr><td style="padding:0 20px 24px 20px;">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${COLORS.light};border:1px solid ${COLORS.border};border-radius:10px;">
-              <tr><td style="padding:16px 18px;">
-                <div style="font:700 13px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial;color:${COLORS.black};margin:0 0 8px 0;">Connect</div>
-                <div style="font:400 13px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial;">
-                  <a href="${escapeHtml(LINKEDIN_URL)}" style="color:${COLORS.blue};text-decoration:none;">LinkedIn</a> &nbsp;•&nbsp;
-                  <a href="${escapeHtml(INSTAGRAM_URL)}" style="color:${COLORS.blue};text-decoration:none;">Instagram</a> &nbsp;•&nbsp;
-                  <a href="${escapeHtml(X_URL)}" style="color:${COLORS.blue};text-decoration:none;">X/Twitter</a>
-                  ${CONTACT_PHONE ? `&nbsp;•&nbsp; <span style="color:${COLORS.text};">Phone: ${escapeHtml(CONTACT_PHONE)}</span>` : ""}
-                </div>
-              </td></tr>
-            </table>
-          </td></tr>
-          <tr><td style="padding:6px 20px 28px 20px;text-align:center;color:#666;font:400 12px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Helvetica,Arial;">
-            © ${new Date().getFullYear()} ${escapeHtml(BRAND_NAME)} • <a href="${escapeHtml(SITE_URL)}" style="color:${COLORS.blue};text-decoration:none;">${escapeHtml(SITE_URL)}</a>
-          </td></tr>
-        </table>
-      </td></tr>
-    </table>
-  </body>
-</html>`;
+  return `<!doctype html><html><head>
+<meta charset="utf-8" />
+<meta name="color-scheme" content="light only">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>${escapeHtml(title)}</title>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(preheader)}</div>
+</head>
+<body style="margin:0;padding:0;background:#ffffff;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${COLORS.blue};">
+<tr><td align="center" style="padding:8px 12px;">
+<span style="font:500 12px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial; color:#fff; letter-spacing:.3px;">
+DISCOVER THE POWER OF CODE AND USE IT TO CHANGE THE WORLD • ARTBYZEFA
+</span></td></tr></table>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${COLORS.black};">
+<tr><td align="center" style="padding:22px 12px;">
+<div style="font:800 24px/1 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial; color:#ffffff; letter-spacing:1px;">
+<span style="display:inline-block;padding:8px 14px;border:2px solid ${COLORS.gold};border-radius:6px;">ARTBYZEFA</span>
+</div></td></tr></table>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr><td align="center">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="640" style="width:100%;max-width:640px;">
+<tr><td style="padding:24px 20px 8px 20px;border-bottom:1px solid ${COLORS.border};">
+<h1 style="margin:0;font:800 20px/1.3 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;color:${COLORS.black};">${escapeHtml(title)}</h1>
+</td></tr>
+<tr><td style="padding:20px;color:${COLORS.text};font:400 14px/1.7 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Helvetica,Arial;">${body}</td></tr>
+<tr><td style="padding:0 20px 24px 20px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${COLORS.light};border:1px solid ${COLORS.border};border-radius:10px;">
+<tr><td style="padding:16px 18px;">
+<div style="font:700 13px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial;color:${COLORS.black};margin:0 0 8px 0;">Connect</div>
+<div style="font:400 13px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial;">
+<a href="${escapeHtml(LINKEDIN_URL)}" style="color:${COLORS.blue};text-decoration:none;">LinkedIn</a> &nbsp;•&nbsp;
+<a href="${escapeHtml(INSTAGRAM_URL)}" style="color:${COLORS.blue};text-decoration:none;">Instagram</a> &nbsp;•&nbsp;
+<a href="${escapeHtml(X_URL)}" style="color:${COLORS.blue};text-decoration:none;">X/Twitter</a>
+${CONTACT_PHONE ? `&nbsp;•&nbsp; <span style="color:${COLORS.text};">Phone: ${escapeHtml(CONTACT_PHONE)}</span>` : ""}
+</div></td></tr></table>
+</td></tr>
+<tr><td style="padding:6px 20px 28px 20px;text-align:center;color:#666;font:400 12px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Helvetica,Arial;">
+© ${new Date().getFullYear()} ${escapeHtml(BRAND_NAME)} • <a href="${escapeHtml(SITE_URL)}" style="color:${COLORS.blue};text-decoration:none;">${escapeHtml(SITE_URL)}</a>
+</td></tr></table></td></tr></table></body></html>`;
 }
 
 function ownerEmailHtml({ firstName, lastName, email, message }) {
@@ -209,13 +163,6 @@ function userEmailHtml({ firstName, message }) {
         <div style="font:400 14px/1.7;white-space:pre-wrap;">${escapeHtml(message)}</div>
       </td></tr>
     </table>
-    <div style="height:16px;"></div>
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="left">
-      <tr><td bgcolor="${COLORS.blue}" style="border-radius:9999px;">
-        <a href="${escapeHtml(SITE_URL)}"
-           style="display:inline-block;padding:12px 18px;font:800 13px/1 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial;color:#fff;text-decoration:none;letter-spacing:.3px;border-radius:9999px;">VISIT WEBSITE</a>
-      </td></tr>
-    </table>
     <p style="margin:16px 0 0 0;color:#666;font:400 12px/1.7 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,Helvetica,Arial;">
       If you didn’t request this message, you can safely ignore it.
     </p>
@@ -223,9 +170,7 @@ function userEmailHtml({ firstName, message }) {
   return emailShell({ preheader, title, body });
 }
 
-/* ---------------------------
-   Health + Contact
-----------------------------*/
+/* ---- Health ---- */
 app.get("/api/health", (_req, res) => res.json({ ok: true, service: "contact-api" }));
 
 app.get("/api/verify-smtp", async (_req, res) => {
@@ -238,6 +183,7 @@ app.get("/api/verify-smtp", async (_req, res) => {
   }
 });
 
+/* ---- Contact (same route / shape) ---- */
 app.post("/api/contact", async (req, res) => {
   try {
     const { firstName, lastName, email, message } = req.body || {};
@@ -248,31 +194,48 @@ app.post("/api/contact", async (req, res) => {
       return res.status(400).json({ error: "Invalid email." });
     }
 
-    // Owner mail
+    // Build a deterministic Message-ID to help threading & reputation
+    const midBase = `${Date.now()}.${Math.random().toString(36).slice(2)}`;
+    const messageIdOwner = `<owner-${midBase}@artbyzefa.today>`;
+    const messageIdUser  = `<user-${midBase}@artbyzefa.today>`;
+
+    /* Owner notification */
     let ownerMail;
     try {
       ownerMail = await transporter.sendMail({
-        from: fromAddress,
+        from: fromAddress,            // must match SMTP user for alignment
         to: OWNER_EMAIL,
-        replyTo: email,
-        subject: `New portfolio contact: ${firstName} ${lastName}`,
+        replyTo: email,               // reply goes to the visitor
+        subject: `New contact from ${firstName} ${lastName} <${email}>`,
         html: ownerEmailHtml({ firstName, lastName, email, message }),
-        text: `New contact\n\nName: ${firstName} ${lastName}\nEmail: ${email}\n\nMessage:\n${message}`,
+        text: `New contact form submission\n\nName: ${firstName} ${lastName}\nEmail: ${email}\n\nMessage:\n${message}`,
+        messageId: messageIdOwner,
+        priority: "normal",
+        headers: {
+          "X-ABZ-Source": "contact-form",
+        },
       });
     } catch (err) {
       console.error("Send to owner failed:", err);
       return res.status(500).json({ error: "Failed to send to owner inbox.", details: devDetails(err) });
     }
 
-    // Auto-reply to user
+    /* Auto-reply */
     let userMail;
     try {
       userMail = await transporter.sendMail({
         from: fromAddress,
         to: email,
+        replyTo: OWNER_EMAIL,         // replies come to you
         subject: `Thanks for contacting ${BRAND_NAME}`,
         html: userEmailHtml({ firstName, message }),
-        text: `Hi ${firstName},\n\nThanks for contacting ${BRAND_NAME}. We received your message and will get back to you soon.\n\nYour message:\n${message}\n\nBest,\n${BRAND_NAME}`,
+        text: `Hi ${firstName},\n\nThanks for contacting ${BRAND_NAME}. We received your message and will get back to you soon.\n\nYour message:\n${message}\n\nBest,\n${BRAND_NAME}\n${SITE_URL}`,
+        messageId: messageIdUser,
+        priority: "normal",
+        headers: {
+          "Auto-Submitted": "auto-replied", // lets providers know this is transactional auto-reply
+          "X-ABZ-Source": "auto-reply",
+        },
       });
     } catch (err) {
       console.error("Auto-reply failed:", err);
@@ -286,9 +249,7 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-/* ---------------------------
-   Start
-----------------------------*/
+/* ---- Start ---- */
 app.listen(Number(PORT), () => {
   console.log(`API running on :${PORT}`);
 });
