@@ -65,7 +65,7 @@ const baseStyles = {
   },
 };
 
-/** Data model (unchanged) */
+/** Data model (existing categories — unchanged) */
 const DATA = {
   Web: {
     websites: [
@@ -105,7 +105,6 @@ const DATA = {
       { title: "TypeScript in 100 Mins", url: "https://www.youtube.com/watch?v=zQnBQ4tB3ZA" },
     ],
   },
-
   Java: {
     websites: [
       { title: "Oracle Java Tutorials", url: "https://docs.oracle.com/javase/tutorial/" },
@@ -144,7 +143,6 @@ const DATA = {
       { title: "System Design Basics", url: "https://www.youtube.com/watch?v=UzLMhqg3_Wc" },
     ],
   },
-
   "C#": {
     websites: [
       { title: ".NET Docs", url: "https://learn.microsoft.com/dotnet/" },
@@ -183,7 +181,6 @@ const DATA = {
       { title: "gRPC with .NET", url: "https://www.youtube.com/watch?v=InQS9JQWQWw" },
     ],
   },
-
   C: {
     websites: [
       { title: "ISO C (cppreference C section)", url: "https://en.cppreference.com/w/c" },
@@ -222,7 +219,6 @@ const DATA = {
       { title: "Unit Testing in C (Unity)", url: "https://www.youtube.com/watch?v=l3hWlJ5RtmY" },
     ],
   },
-
   DSA: {
     websites: [
       { title: "CLRS Companion Site", url: "https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/" },
@@ -261,7 +257,6 @@ const DATA = {
       { title: "Back to Back SWE", url: "https://www.youtube.com/@backtobackswe" },
     ],
   },
-
   Python: {
     websites: [
       { title: "Python Docs", url: "https://docs.python.org/3/" },
@@ -300,7 +295,6 @@ const DATA = {
       { title: "Data Structures in Python", url: "https://www.youtube.com/watch?v=R-HLU9Fl5ug" },
     ],
   },
-
   "CCNA / Networking": {
     websites: [
       { title: "Cisco Learning Network", url: "https://learningnetwork.cisco.com/" },
@@ -339,7 +333,6 @@ const DATA = {
       { title: "NAT & PAT", url: "https://www.youtube.com/watch?v=FvZMs6KSmrA" },
     ],
   },
-
   "Cyber Security": {
     websites: [
       { title: "OWASP Top Ten", url: "https://owasp.org/www-project-top-ten/" },
@@ -378,7 +371,6 @@ const DATA = {
       { title: "TLS/HTTPS Explained", url: "https://www.youtube.com/watch?v=SJJmoDZ3il8" },
     ],
   },
-
   "ML / AI": {
     websites: [
       { title: "scikit-learn", url: "https://scikit-learn.org/stable/" },
@@ -419,6 +411,87 @@ const DATA = {
   },
 };
 
+/* ---------- NEW: Frontend Toolbox section ---------- */
+const TOOLBOX = [
+  {
+    title: "Animations",
+    items: [
+      { label: "Keyframes.app", url: "https://keyframes.app" },
+      { label: "Animista", url: "https://animista.net" }, // (user wrote 'Animesta'; using common Animista)
+      { label: "LottieFiles", url: "https://lottiefiles.com" },
+      { label: "Easings.net", url: "https://easings.net" }, // “Easing wizard”
+    ],
+  },
+  {
+    title: "Animated Icons",
+    items: [
+      { label: "useanimations", url: "https://useanimations.com" },
+      { label: "Lottieflow", url: "https://www.lottieflow.com" },
+    ],
+  },
+  {
+    title: "Icons",
+    items: [
+      { label: "Hugeicons", url: "https://hugeicons.com" },
+      { label: "Ionicons", url: "https://ionic.io/ionicons" },
+      { label: "Freepik", url: "https://www.freepik.com" },
+      { label: "Material Symbols", url: "https://fonts.google.com/icons" },
+      { label: "Boxicons", url: "https://boxicons.com" },
+      { label: "Iconify", url: "https://iconify.design" },
+      { label: "Lordicon", url: "https://lordicon.com" },
+    ],
+  },
+  {
+    title: "Fonts & Text",
+    items: [
+      { label: "Use & Modify", url: "https://usemodify.com" },
+      { label: "UTOPIA", url: "https://utopia.fyi" },
+      { label: "Type Scale", url: "https://type-scale.com/" },
+      { label: "Velvetyne", url: "https://velvetyne.fr" },
+      { label: "Dirty Line Studio", url: "https://dirtylinestudio.com" },
+      { label: "Fontshare", url: "https://www.fontshare.com" },
+      { label: "Free Faces", url: "https://www.freefaces.gallery" },
+      { label: "Fontpair", url: "https://www.fontpair.co" },
+      { label: "Monotype", url: "https://www.monotype.com" },
+      { label: "Min Fonts", url: "https://www.minfonts.com/" },
+    ],
+  },
+  {
+    title: "Gradients",
+    items: [
+      { label: "WebGradients (itmeo)", url: "https://webgradients.com" },
+      { label: "CSS Gradient", url: "https://cssgradient.io" },
+    ],
+  },
+  {
+    title: "Colors",
+    items: [
+      { label: "Picular", url: "https://picular.co" },
+      { label: "UI Colors", url: "https://uicolors.app" },
+      { label: "Color Hunt", url: "https://colorhunt.co" },
+      { label: "Tailwind Shades", url: "https://uicolors.app" },
+    ],
+  },
+  {
+    title: "Web Designs / Inspiration",
+    items: [
+      { label: "Savee", url: "https://savee.it" },
+      { label: "Refero", url: "https://refero.design" },
+    ],
+  },
+  {
+    title: "Loaders",
+    items: [{ label: "UI Ball Loaders", url: "https://uiball.com" }],
+  },
+  {
+    title: "3D Things",
+    items: [
+      { label: "Storytale", url: "https://storytale.io" },
+      { label: "Spline", url: "https://spline.design" },
+    ],
+  },
+];
+
 /* ---------- UI helpers ---------- */
 const CATEGORIES = Object.keys(DATA);
 
@@ -440,11 +513,44 @@ function Section({ title, items }) {
   );
 }
 
+/** NEW: Toolbox card & layout styles (different from the category style) */
+const toolboxStyles = {
+  wrap: (cols) => ({
+    display: "grid",
+    gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+    gap: 16,
+    marginTop: 28,
+  }),
+  card: {
+    border: "1px dashed #d9dceb",
+    background: "linear-gradient(180deg,#ffffff, #fafbff)",
+    borderRadius: 14,
+    padding: 14,
+  },
+  head: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 },
+  h4: { fontSize: 16, fontWeight: 800, margin: 0, letterSpacing: ".2px" },
+  list: { display: "flex", flexWrap: "wrap", gap: 8 },
+  pill: {
+    display: "inline-block",
+    padding: "8px 12px",
+    borderRadius: 9999,
+    border: "1px solid #e6e8f0",
+    background: "#fff",
+    color: "#1f3af2",
+    fontWeight: 600,
+    textDecoration: "none",
+    fontSize: 13,
+    lineHeight: 1,
+    maxWidth: "100%",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  },
+};
+
 /** Small hook to track viewport width for responsive inline styles */
 function useViewport() {
-  const [w, setW] = useState(
-    typeof window === "undefined" ? 1200 : window.innerWidth
-  );
+  const [w, setW] = useState(typeof window === "undefined" ? 1200 : window.innerWidth);
   useEffect(() => {
     const onR = () => setW(window.innerWidth);
     window.addEventListener("resize", onR, { passive: true });
@@ -459,12 +565,12 @@ export default function ResourcesPage() {
 
   const width = useViewport();
 
-  // Responsive knobs
+  // Responsive knobs (existing)
   const cols = width < 640 ? 1 : width < 992 ? 2 : 3;
   const pagePad = width < 480 ? "18px 10px" : width < 768 ? "22px 12px" : "24px 12px";
   const titleSize = width < 480 ? 24 : width < 768 ? 30 : 36;
 
-  // Computed container grid style
+  // Computed container grid (existing)
   const gridWrapStyle = useMemo(
     () => ({
       display: "grid",
@@ -475,6 +581,9 @@ export default function ResourcesPage() {
     [cols]
   );
 
+  // NEW: responsive columns for toolbox (denser on wide screens)
+  const toolboxCols = width < 520 ? 1 : width < 900 ? 2 : 3;
+
   return (
     <section style={{ ...baseStyles.page, padding: pagePad }}>
       <h1 style={{ ...baseStyles.title, fontSize: titleSize }}>Developer Resources</h1>
@@ -482,6 +591,7 @@ export default function ResourcesPage() {
         Curated, evergreen links for learning and mastery. Books, courses, and docs — hand-picked for quality.
       </p>
 
+      {/* Existing category tabs & 3-column grid */}
       <div style={baseStyles.tabs.wrap}>
         {CATEGORIES.map((c) => (
           <button key={c} style={baseStyles.tabs.btn(c === tab)} onClick={() => setTab(c)}>
@@ -496,6 +606,40 @@ export default function ResourcesPage() {
         <Section title="Videos / Courses" items={pack.videos} />
       </div>
 
+      {/* NEW: Frontend Toolbox section with a different style */}
+      <div style={{ marginTop: 36 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 800, margin: "0 0 6px" }}>Frontend Toolbox</h2>
+        <p style={{ color: "#5b6473", margin: "0 0 14px" }}>
+          Handy links for motion, icons, type, gradients, colors, inspo, loaders, and 3D.
+        </p>
+
+        <div style={toolboxStyles.wrap(toolboxCols)}>
+          {TOOLBOX.map((group, i) => (
+            <div key={i} style={toolboxStyles.card}>
+              <div style={toolboxStyles.head}>
+                <h4 style={toolboxStyles.h4}>{group.title}</h4>
+                <span style={{ fontSize: 12, color: "#687086" }}>{group.items.length} links</span>
+              </div>
+              <div style={toolboxStyles.list}>
+                {group.items.map((it, j) => (
+                  <a
+                    key={j}
+                    href={it.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={toolboxStyles.pill}
+                    title={it.label}
+                  >
+                    {it.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footnote (existing) */}
       <div
         style={{
           marginTop: 24,
