@@ -19,7 +19,7 @@ const PROJECTS = [
     desc: "React text editor with formatting tools and live summary.",
     tech: ["JavaScript","HTML","CSS"],
     link: "#",
-    github: "https://github.com/codifyzefa/textunits",
+    github: "https://ininsico.vercel.app/",
   },
 ];
 
@@ -39,7 +39,7 @@ export default function ProjectsGrid() {
               </div>
               <p className="project-desc">{p.desc}</p>
               <div className="project-actions">
-                <a className="btn-login-custom" href={p.github} target="_blank" rel="noreferrer">github</a>
+                <a className="btn-login-custom" href={p.github} target="_blank" rel="noreferrer">Live</a>
               </div>
             </div>
           ))}
