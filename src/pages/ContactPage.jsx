@@ -5,7 +5,7 @@ import "./contact.css";
 
 // Resolve API base in this order:
 // 1) Vite env (VITE_API_BASE) or CRA env (REACT_APP_API_BASE)
-// 2) Fallback to your live Render URL (portfolio-2-yngq)
+// 2) Fallback to your live Render URL (portfolio-3-z9h6)
 function resolveApiBase() {
   const viteBase =
     (typeof import.meta !== "undefined" &&
@@ -18,7 +18,7 @@ function resolveApiBase() {
   if (craBase) return craBase;
 
   // Default to your new backend on Render
-  return "https://portfolio-2-yngq.onrender.com";
+  return "https://portfolio-3-z9h6.onrender.com";
 }
 const API_BASE = resolveApiBase();
 
@@ -47,9 +47,13 @@ export default function ContactPage() {
 
     setLoading(true);
     try {
+      // Optional: warm up the Render instance to avoid cold-start > 20s
+      try { await axios.get(`${API_BASE}/api/health`, { timeout: 8000 }); } catch {}
+
       const { data } = await axios.post(`${API_BASE}/api/contact`, form, {
         headers: { "Content-Type": "application/json" },
-        timeout: 20000,
+        // give the server time if SMTP is slow or instance just woke up
+        timeout: 60000,
       });
 
       if (!data?.ok) throw new Error(data?.error || "Failed to send message.");

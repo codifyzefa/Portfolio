@@ -32,29 +32,32 @@ export default function AnnouncementPopup() {
   return (
     <>
       <div className="announcement-overlay" ref={overlayRef} />
-      <div className="announcement-popup" ref={popupRef} onClick={(e) => e.stopPropagation()}>
+      <div className="announcement-popup" style={{ maxHeight: "70vh", overflowY: "auto" }} ref={popupRef} onClick={(e) => e.stopPropagation()}>
         <button className="close-popup" id="closePopup">&times;</button>
         <div className="announcement-header">Important Announcements</div>
 
         <div className="announcement-item">
-          <strong>Welcome to artbyzefa Community</strong> [
-          <a href="https://www.instagram.com/artbyzefa/" id="detailsLink">Click for Details</a>]
+          <strong>𝗰𝗼𝗻𝗻𝗲𝗰𝘁.𝗮𝗿𝘁𝗯𝘆𝘇𝗲𝗳𝗮.𝘁𝗼𝗱𝗮𝘆 𝗶𝘀 𝗡𝗢𝗪 𝗟𝗜𝗩𝗘!</strong><br />
+          <p>I’m excited to officially announce the launch of connect.artbyzefa.today — my own web-based video conferencing platform, built to make online communication simple, fast, and accessible for everyone.</p>
+          <a href="https://connect.artbyzefa.today">🔗 Try it now: connect.artbyzefa.today</a>
         </div>
+
 
         <div className="announcement-item">
-          <strong>Launching Notification</strong><br />
-          <a href="notification.jpg">Click here for Notification</a>
+          <strong>𝗮𝗺𝗼𝗼𝗻𝗶𝗲𝗲.𝗮𝗿𝘁𝗯𝘆𝘇𝗲𝗳𝗮.𝘁𝗼𝗱𝗮𝘆 𝗶𝘀 𝗖𝗢𝗠𝗜𝗡𝗚 𝗦𝗢𝗢𝗡!</strong><br />
+          <p>I’m excited to share that amooniee.artbyzefa.today a new web-based chat platform inspired by the simplicity and speed of WhatsApp on the way!</p>
+          <p>Amooniee is being built to offer a clean interface, real-time messaging, and smooth communication directly in the browser, with no app installation required.</p>
+          <p>Stay tuned for the official launch and upcoming updates!</p>
+          <a href="https://amooniee.artbyzefa.today" id="detailsLink">🔗 Launching soon at: amooniee.artbyzefa.today</a>
         </div>
 
-          <div className="announcement-item">
-          <strong>Announcement</strong><br />
-          <p>The AI Chatbot of ArtByZefa is currently experiencing issues and may not work as expected.</p>
-          <p>Our team is actively working on resolving the problem. Please stay tuned — we expect things to be back to normal within 4–5 days.</p>
-          <p>Thank you for your patience and understanding.</p>
-        </div>
         <div className="announcement-item">
           <strong>Official Instagram Page</strong><br />
           [<a href="https://www.instagram.com/artbyzefa/" id="detailsLink">Click for Details</a>]
+        </div>
+        <div className="announcement-item">
+          <strong>Launching Notification</strong><br />
+          <a href="notification.jpg">Click here for Notification</a>
         </div>
       </div>
     </>
