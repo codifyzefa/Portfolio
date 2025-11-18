@@ -8,8 +8,8 @@ export default function Hero() {
         </p>
         <div className="slogan">"The Art that Inspires you"</div>
         <div className="hero-buttons">
-          <a href="#" className="btn-signup-custom" style={{ height: 48, padding: "0 24px", fontSize: 14 }}>VIEW PORTFOLIO</a>
-          <a href="#" className="btn-login-custom" style={{ height: 48, padding: "0 24px", fontSize: 14 }}>COMMISSION WORK</a>
+          <a href="/portfolio" className="btn-signup-custom" style={{ height: 48, padding: "0 24px", fontSize: 14 }}>VIEW PORTFOLIO</a>
+          <a href="https://github.com/codifyzefa" className="btn-login-custom" style={{ height: 48, padding: "0 24px", fontSize: 14 }}>Git Hub</a>
         </div>
       </div>
     </section>

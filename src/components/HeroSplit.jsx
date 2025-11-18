@@ -4,7 +4,7 @@ export default function HeroSplit() {
       <div className="container hero-split">
        
         <div className="hero-photo">
-          <img src="/portimg.jpg" alt="Huzaifa portrait" />
+          <img src="/newprof.jpg" alt="Huzaifa portrait" />
         </div>
 
         

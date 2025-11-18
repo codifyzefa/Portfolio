@@ -21,6 +21,42 @@ const PROJECTS = [
     link: "#",
     github: "https://github.com/codifyzefa/textunits",
   },
+  {
+    title: "Video Conference Web App Zoom",
+    desc: "Full-Featured Zoom-like Video Conferencing Application.",
+    tech: ["Next.js 14",
+ "TypeScript",
+ "Clerk Authentication",
+ "Stream (getstream) Video SDK",
+ "Tailwind CSS",
+ "shadcn/ui","React","Tailwind CSS"],
+    link: "https://connect.artbyzefa.today",
+    github: "https://github.com/codifyzefa/connectsystem",
+  },
+  {
+    title: "Chat Web App Like Whatsapp",
+    desc: "Full-Featured Whatsapp Like Chat Web App",
+    tech: ["Next.js 14",
+ "TypeScript",
+ "Clerk Authentication",
+ "Socket.io",
+
+ "React","Tailwind CSS"],
+    link: "https://amooniee.artbyzefa.today",
+    github: "https://github.com/codifyzefa/ChatApp",
+  },
+  {
+    title: "API Services by artbyzefa",
+    desc: "A powerful backend development Studio Designed to Simplify and Accelerate How Developers and Teams Build Backend Systems.",
+    tech: ["Next.js 14",
+ "TypeScript",
+ "Advance MongoDB",
+ "Core Backend Logic",
+ "CRUD Operation",
+ "React","Tailwind CSS"],
+    link: "https://apiservices.artbyzefa.today",
+    github: "https://github.com/Ininsico/chatapp",
+  },
 ];
 
 export default function ProjectsGrid() {
@@ -39,8 +75,10 @@ export default function ProjectsGrid() {
               </div>
               <p className="project-desc">{p.desc}</p>
               <div className="project-actions">
-                <a className="btn-login-custom" href={p.github} target="_blank" rel="noreferrer">github/Live</a>
+                <a className="btn-login-custom" href={p.github} target="_blank" rel="noreferrer">github</a>
+                <a className="btn-login-custom" href={p.link} target="_blank" rel="noreferrer">Live</a>
               </div>
+              
             </div>
           ))}
         </div>
