@@ -18,7 +18,7 @@ function resolveApiBase() {
   if (craBase) return craBase;
 
   // 🔹 Fallback: local backend
-  return "http://localhost:5000";
+  return "https://portfolio-2-yngq.onrender.com";
 }
 
 const API_BASE = resolveApiBase();
