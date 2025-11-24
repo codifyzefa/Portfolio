@@ -5,7 +5,7 @@ import "./contact.css";
 
 // Resolve API base in this order:
 // 1) Vite env (VITE_API_BASE) or CRA env (REACT_APP_API_BASE)
-// 2) Fallback to your live Render URL (portfolio-3-z9h6)
+// 2) Fallback to local backend on http://localhost:5000
 function resolveApiBase() {
   const viteBase =
     (typeof import.meta !== "undefined" &&
@@ -17,23 +17,31 @@ function resolveApiBase() {
   if (viteBase) return viteBase;
   if (craBase) return craBase;
 
-  // Default to your new backend on Render
-  return "https://portfolio-3-z9h6.onrender.com";
+  // 🔹 Fallback: local backend
+  return "http://localhost:5000";
 }
+
 const API_BASE = resolveApiBase();
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ firstName: "", lastName: "", email: "", message: "" });
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: "",
+  });
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", msg: "" });
 
-  const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const onChange = (e) =>
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
   const validate = () => {
     if (!form.firstName.trim()) return "First name is required.";
     if (!form.lastName.trim()) return "Last name is required.";
     if (!form.email.trim()) return "Email is required.";
-    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email)) return "Enter a valid email.";
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email))
+      return "Enter a valid email.";
     if (!form.message.trim()) return "Message is required.";
     return "";
   };
@@ -47,23 +55,45 @@ export default function ContactPage() {
 
     setLoading(true);
     try {
-      // Optional: warm up the Render instance to avoid cold-start > 20s
-      try { await axios.get(`${API_BASE}/api/health`, { timeout: 8000 }); } catch {}
+      // Optional: warm up backend
+      try {
+        await axios.get(`${API_BASE}/api/health`, { timeout: 8000 });
+      } catch {
+        // ignore warmup failure
+      }
 
       const { data } = await axios.post(`${API_BASE}/api/contact`, form, {
         headers: { "Content-Type": "application/json" },
-        // give the server time if SMTP is slow or instance just woke up
         timeout: 60000,
       });
 
-      if (!data?.ok) throw new Error(data?.error || "Failed to send message.");
+      if (!data?.ok) {
+        throw new Error(data?.error || "Failed to send message.");
+      }
+
+      let msg =
+        "Thanks! Your message has been sent. Please check your email.";
+      if (data.warning) {
+        msg += ` (Note: ${data.warning})`;
+      }
+
       setStatus({
         type: "success",
-        msg: "Thanks! Your message has been sent. Please check your email.",
+        msg,
       });
+
       setForm({ firstName: "", lastName: "", email: "", message: "" });
     } catch (e2) {
-      setStatus({ type: "error", msg: e2.message || "Something went wrong. Try again." });
+      const backendError =
+        e2?.response?.data?.error ||
+        e2?.response?.data?.message ||
+        e2?.response?.data?.warning;
+      const msg =
+        backendError ||
+        e2.message ||
+        "Something went wrong. Please try again.";
+
+      setStatus({ type: "error", msg });
     } finally {
       setLoading(false);
     }
@@ -73,14 +103,24 @@ export default function ContactPage() {
     <section className="contact-section">
       <div className="container contact-wrap">
         <div className="contact-left">
-          <h1 className="section-title" style={{ textAlign: "left" }}>Contact</h1>
+          <h1 className="section-title" style={{ textAlign: "left" }}>
+            Contact
+          </h1>
           <p className="contact-lead">
-            Have a project, idea, or question? Send me a message and I’ll get back to you shortly.
+            Have a project, idea, or question? Send me a message and I’ll get
+            back to you shortly.
           </p>
           <ul className="contact-points">
-            <li><i className="fa-solid fa-envelope"></i> artbyzefa@gmail.com</li>
-            <li><i className="fab fa-linkedin"></i> linkedin.com/in/huzaifasafdar</li>
-            <li><i className="fab fa-instagram"></i> instagram.com/artbyzefa</li>
+            <li>
+              <i className="fa-solid fa-envelope"></i> artbyzefa@gmail.com
+            </li>
+            <li>
+              <i className="fab fa-linkedin"></i>{" "}
+              linkedin.com/in/huzaifasafdar
+            </li>
+            <li>
+              <i className="fab fa-instagram"></i> instagram.com/artbyzefa
+            </li>
           </ul>
         </div>
 
@@ -88,22 +128,48 @@ export default function ContactPage() {
           <div className="row-2">
             <div className="form-control">
               <label>First name</label>
-              <input name="firstName" value={form.firstName} onChange={onChange} placeholder="Your first name" required />
+              <input
+                name="firstName"
+                value={form.firstName}
+                onChange={onChange}
+                placeholder="Your first name"
+                required
+              />
             </div>
             <div className="form-control">
               <label>Last name</label>
-              <input name="lastName" value={form.lastName} onChange={onChange} placeholder="Your last name" required />
+              <input
+                name="lastName"
+                value={form.lastName}
+                onChange={onChange}
+                placeholder="Your last name"
+                required
+              />
             </div>
           </div>
 
           <div className="form-control">
             <label>Email</label>
-            <input name="email" type="email" value={form.email} onChange={onChange} placeholder="you@example.com" required />
+            <input
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={onChange}
+              placeholder="you@example.com"
+              required
+            />
           </div>
 
           <div className="form-control">
             <label>Message</label>
-            <textarea name="message" rows="6" value={form.message} onChange={onChange} placeholder="Tell me about your project..." required />
+            <textarea
+              name="message"
+              rows="6"
+              value={form.message}
+              onChange={onChange}
+              placeholder="Tell me about your project..."
+              required
+            />
           </div>
 
           <button className="btn-signup-custom contact-submit" disabled={loading}>
@@ -111,7 +177,11 @@ export default function ContactPage() {
           </button>
 
           {status.msg && (
-            <div className={`form-status ${status.type === "error" ? "error" : "success"}`}>
+            <div
+              className={`form-status ${
+                status.type === "error" ? "error" : "success"
+              }`}
+            >
               {status.msg}
             </div>
           )}
